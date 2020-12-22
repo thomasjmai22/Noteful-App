@@ -1,26 +1,49 @@
-import React, { Component } from 'react'
-import NotefulForm from '../NotefulForm/NotefulForm'
-import './AddFolder.css'
+import React, { Component } from "react";
+import ApiContext from "../ApiContext";
+// import NotefulForm from "../NotefulForm/NotefulForm";
+import config from "../config";
+import "./AddFolder.css";
 
 export default class AddFolder extends Component {
+  static contextType = ApiContext;
+
+  addFolder = (name) => {
+    fetch(`${config.API_ENDPOINT}/folders/`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ id: `${this.context.folders.length + 1}`, name }),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        this.context.addFolder(data);
+        this.props.history.push("/");
+      });
+  };
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const newFolder = event.target.newFolder.value;
+    this.addFolder(newFolder);
+  }
+
   render() {
     return (
-      <section className='AddFolder'>
-        <h2>Create a folder</h2>
-        <NotefulForm>
-          <div className='field'>
-            <label htmlFor='folder-name-input'>
-              Name
-            </label>
-            <input type='text' id='folder-name-input' />
-          </div>
-          <div className='buttons'>
-            <button type='submit'>
-              Add folder
-            </button>
-          </div>
-        </NotefulForm>
-      </section>
-    )
+      <header>
+        <h2 className='addFolder-header'>Add Folder</h2>
+        <form className='addFolder-form' onSubmit={(e) => this.handleSubmit(e)}>
+          <label htmlFor='newFolder'>Folder Name</label>
+          <input
+            type='text'
+            name='newFolder'
+            id='newFolder'
+            required
+            min='3'
+          ></input>
+          <button type='submit'>Submit</button>
+        </form>
+      </header>
+    );
   }
 }

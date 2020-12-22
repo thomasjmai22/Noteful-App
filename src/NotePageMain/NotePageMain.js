@@ -2,6 +2,7 @@ import React from "react";
 import Note from "../Note/Note";
 import ApiContext from "../ApiContext";
 import { findNote } from "../notes-helpers";
+import propTypes from "prop-types";
 import "./NotePageMain.css";
 
 export default class NotePageMain extends React.Component {
@@ -37,6 +38,9 @@ export default class NotePageMain extends React.Component {
     );
   }
 }
+NotePageMain.propTypes = {
+  match: propTypes.object,
+};
 
 // export default function NotePageMain(props) {
 //   return (

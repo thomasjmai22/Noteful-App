@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
+import propTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Note.css";
 import config from "../config";
@@ -26,9 +26,6 @@ export default class Note extends React.Component {
     })
       .then((res) => {
         if (!res.ok) return res.json().then((e) => Promise.reject(e));
-        return res.json();
-      })
-      .then(() => {
         this.context.deleteNote(noteId);
         // allow parent to perform extra behaviour
         this.props.onDeleteNote(noteId);
@@ -58,7 +55,7 @@ export default class Note extends React.Component {
           <div className='Note__dates-modified'>
             Modified{" "}
             <span className='Date'>
-              {format(modified, "Do MMM YYYY")}
+              {new Date(modified).toLocaleDateString()}
               {/* deleted props from props.modified */}
             </span>
           </div>
@@ -67,3 +64,9 @@ export default class Note extends React.Component {
     );
   }
 }
+
+Note.propTypes = {
+  id: propTypes.string,
+  name: propTypes.string,
+  modified: propTypes.string,
+};

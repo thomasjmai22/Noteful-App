@@ -5,12 +5,13 @@ import NoteListNav from "./NoteListNav/NoteListNav";
 import NotePageNav from "./NotePageNav/NotePageNav";
 import NoteListMain from "./NoteListMain/NoteListMain";
 import NotePageMain from "./NotePageMain/NotePageMain";
-// import AddFolder from "./AddFolder/AddFolder";
-// import AddNote from "./AddNote/AddNote";
+import AddFolder from "./AddFolder/AddFolder";
+import AddNote from "./AddNote/AddNote";
 // import dummyStore from "./dummy-store";
 // import { getNotesForFolder, findNote, findFolder } from "./notes-helpers";
 import config from "./config";
 import "./App.css";
+import Errors from "./Errors";
 import ApiContext from "./ApiContext";
 
 class App extends Component {
@@ -31,13 +32,21 @@ class App extends Component {
 
         return Promise.all([notesRes.json(), foldersRes.json()]);
       })
-      .then(({ notes, folders }) => {
+      .then(([notes, folders]) => {
         this.setState({ notes, folders });
       })
       .catch((error) => {
         console.log({ error });
       });
   }
+
+  handleAddFolder = (newFolder) => {
+    this.setState({ folders: [...this.state.folders, newFolder] });
+  };
+
+  handleAddNote = (newNote) => {
+    this.setState({ notes: [...this.state.notes, newNote] });
+  };
 
   handleDeleteNote = (noteId) => {
     this.setState({
@@ -98,13 +107,14 @@ class App extends Component {
           const note = findNote(notes, noteId);
           return <NotePageMain {...routeProps} note={note} />;
         }}
-        />
+        /> */}
         <Route path='/add-folder' component={AddFolder} />
-        <Route
+        {/* <Route
           path='/add-note'
           render={(routeProps) => {
             return <AddNote {...routeProps} folders={folders} />;
           }} */}
+        <Route path='/add-note' component={AddNote} />
       </>
     );
   }
@@ -114,18 +124,22 @@ class App extends Component {
       notes: this.state.notes,
       folders: this.state.folders,
       deleteNote: this.handleDeleteNote,
+      addFolder: this.handleAddFolder,
+      addNote: this.handleAddNote,
     };
     return (
       <ApiContext.Provider value={value}>
         <div className='App'>
-          <nav className='App__nav'>{this.renderNavRoutes()}</nav>
-          <header className='App__header'>
-            <h1>
-              <Link to='/'>Noteful</Link>{" "}
-              <FontAwesomeIcon icon='check-double' />
-            </h1>
-          </header>
-          <main className='App__main'>{this.renderMainRoutes()}</main>
+          <Errors>
+            <nav className='App__nav'>{this.renderNavRoutes()}</nav>
+            <header className='App__header'>
+              <h1>
+                <Link to='/'>Noteful</Link>{" "}
+                <FontAwesomeIcon icon='check-double' />
+              </h1>
+            </header>
+            <main className='App__main'>{this.renderMainRoutes()}</main>
+          </Errors>
         </div>
       </ApiContext.Provider>
     );
