@@ -5,3 +5,8 @@
 .AddFolder h2 {
   margin-left: 16px;
 }
+
+.addFolder-header,
+label {
+  color: white;
+}

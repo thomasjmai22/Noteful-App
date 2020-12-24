@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ApiContext from "../ApiContext";
 // import NotefulForm from "../NotefulForm/NotefulForm";
 import config from "../config";
+import propTypes from "prop-types";
 import "./AddFolder.css";
 
 export default class AddFolder extends Component {
@@ -19,6 +20,9 @@ export default class AddFolder extends Component {
       .then((data) => {
         this.context.addFolder(data);
         this.props.history.push("/");
+      })
+      .catch((error) => {
+        alert("An error has occurred!");
       });
   };
 
@@ -47,3 +51,7 @@ export default class AddFolder extends Component {
     );
   }
 }
+
+AddFolder.propTypes = {
+  history: propTypes.func.isRequired,
+};

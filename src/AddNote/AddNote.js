@@ -2,6 +2,7 @@ import React, { Component } from "react";
 // import NotefulForm from "../NotefulForm/NotefulForm";
 import config from "../config";
 import ApiContext from "../ApiContext";
+import propTypes from "prop-types";
 import "./AddNote.css";
 
 export default class AddNote extends Component {
@@ -19,6 +20,9 @@ export default class AddNote extends Component {
       .then((note) => {
         this.context.addNote(note);
         this.props.history.push("/");
+      })
+      .catch((error) => {
+        alert("An error has occurred!");
       });
   };
 
@@ -44,12 +48,11 @@ export default class AddNote extends Component {
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>Content</label>
-            <textarea id='note-content-input' name='content' />
+            <textarea id='note-content-input' name='content' required />
           </div>
           <div className='field'>
             <label htmlFor='note-folder-select'>Folder</label>
-            <select id='note-folder-select' name='folder'>
-              <option value={null}>...</option>
+            <select id='note-folder-select' name='folder' required>
               {this.context.folders.map((folder) => (
                 <option key={folder.id} value={folder.id}>
                   {folder.name}
@@ -65,3 +68,7 @@ export default class AddNote extends Component {
     );
   }
 }
+
+AddNote.propTypes = {
+  history: propTypes.func.isRequired,
+};
